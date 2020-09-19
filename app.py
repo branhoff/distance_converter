@@ -14,11 +14,11 @@ class DistanceConverter(tk.Tk):
         container = ttk.Frame(self)
         container.grid(padx=60, pady=30, sticky="EW")
 
-        frame = MetresToFeet(container)
+        frame = FeetToMetres(container)
         frame.grid(row=0, column=0, sticky="NSEW")
 
-        self.bind("<Return>", frame.calculate_feet)
-        self.bind("<KP_Enter>", frame.calculate_feet)
+        self.bind("<Return>", frame.calculate)
+        self.bind("<KP_Enter>", frame.calculate)
 
 
 class MetresToFeet(ttk.Frame):
@@ -34,7 +34,7 @@ class MetresToFeet(ttk.Frame):
         metres_input = ttk.Entry(self, width=10, textvariable=self.metres_value, font=("Segoe UI", 15))
         feet_label = ttk.Label(self, text="Feet:")
         feet_display = ttk.Label(self, textvariable=self.feet_value)
-        calc_button = ttk.Button(self, text="Calculate", command=self.calculate_feet)
+        calc_button = ttk.Button(self, text="Calculate", command=self.calculate)
 
         # -- Layout --
         metres_label.grid(column=0, row=0, sticky="W")
@@ -50,7 +50,7 @@ class MetresToFeet(ttk.Frame):
             child.grid_configure(padx=15, pady=15)
 
 
-    def calculate_feet(self, *args):
+    def calculate(self, *args):
         try:
             metres = float(self.metres_value.get())
             feet = metres * 3.28084
@@ -59,6 +59,44 @@ class MetresToFeet(ttk.Frame):
             pass
 
 
+class FeetToMetres(ttk.Frame):
+    def __init__(self, container, **kwargs):
+        super().__init__(container, **kwargs)
+
+        self.feet_value = tk.StringVar()
+        self.metres_value = tk.StringVar()
+
+        # -- Widgets
+
+        feet_label = ttk.Label(self, text="Feet:")
+        feet_input = ttk.Entry(self, width=10, textvariable=self.feet_value, font=("Segoe UI", 15))
+        metres_label = ttk.Label(self, text="Metres:")
+        metres_display = ttk.Label(self, textvariable=self.metres_value)
+        calc_button = ttk.Button(self, text="Calculate", command=self.calculate)
+
+        # -- Layout --
+        feet_label.grid(column=0, row=0, sticky="W")
+        feet_input.grid(column=1, row=0, sticky="EW")
+        feet_input.focus()  
+        
+        metres_label.grid(column=0, row=1, sticky="W")
+        metres_display.grid(column=1, row=1, sticky="EW")
+
+
+
+        calc_button.grid(column=0, row=2, columnspan=2, sticky="EW")
+
+        for child in self.winfo_children():
+            child.grid_configure(padx=15, pady=15)
+
+
+    def calculate(self, *args):
+        try:
+            feet = float(self.feet_value.get())
+            metres = feet / 3.28084
+            self.metres_value.set(f"{metres:.3f}")
+        except ValueError:
+            pass
 
 root = DistanceConverter()
 
