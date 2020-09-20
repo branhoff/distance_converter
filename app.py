@@ -17,7 +17,7 @@ class DistanceConverter(tk.Tk):
 
 
         for FrameClass in (MetresToFeet, FeetToMetres):
-            frame = FrameCalss(container, self)
+            frame = FrameClass(container, self)
             self.frames[FrameClass] = frame
             frame.grid(row=0, column=0, sticky="NSEW")
         
@@ -88,6 +88,11 @@ class FeetToMetres(ttk.Frame):
         metres_label = ttk.Label(self, text="Metres:")
         metres_display = ttk.Label(self, textvariable=self.metres_value)
         calc_button = ttk.Button(self, text="Calculate", command=self.calculate)
+        switch_page_button = ttk.Button(
+            self,
+            text="Switch to metre conversion",
+            command=lambda: controller.show_frame(MetresToFeet)
+        )
 
         # -- Layout --
         feet_label.grid(column=0, row=0, sticky="W")
@@ -98,6 +103,7 @@ class FeetToMetres(ttk.Frame):
         metres_display.grid(column=1, row=1, sticky="EW")
 
         calc_button.grid(column=0, row=2, columnspan=2, sticky="EW")
+        switch_page_button.grid(column=0, row=3, columnspan=2, sticky="EW")
 
         for child in self.winfo_children():
             child.grid_configure(padx=15, pady=15)
